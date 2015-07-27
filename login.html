@@ -85,10 +85,20 @@
 				var password = $( "#password" ).val();
 				localStorage.setItem("email", email);
 				localStorage.setItem("password", password);
-				
-				if(email == "joaoplaranjeira@gmail.com" && password=="teste")
-					window.location.replace("index.html");	
-				
+					
+				$.getJSON("json/users.json", function(result){
+					
+					$.each(result, function(i, field){
+						$.each(result.users, function (idx, val) {
+							if((val.email == email) && (val.password = password)){
+								localStorage.setItem("imgUser", val.image);
+								window.location.replace("index.html");
+								return false;
+							}
+						});
+					});
+				});
+
 				
 			} else {
 				alert('Sorry! No Web Storage support..');

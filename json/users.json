@@ -1,0 +1,14 @@
+{
+    "users": [
+            {
+                "email": "joaoplaranjeira@gmail.com",
+                "password": "teste",
+				"image":"dist/img/avatar5.png"
+            },
+            {
+                "email": "teste@email.com",
+                "password": "teste",
+				"image": "dist/img/avatar.png"
+            }]
+  
+}
