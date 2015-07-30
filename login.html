@@ -90,8 +90,10 @@
 					
 					$.each(result, function(i, field){
 						$.each(result.users, function (idx, val) {
-							if((val.email == email) && (val.password = password)){
-								localStorage.setItem("imgUser", val.image);
+							if((val.email == email) && (val.password == password)){
+								localStorage.setItem("imgUser", val.image);								
+								localStorage.setItem("nameUser", val.name);
+								localStorage.setItem("jobTitleUser", val.jobTitle);
 								window.location.replace("index.html");
 								return false;
 							}
