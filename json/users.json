@@ -3,11 +3,15 @@
             {
                 "email": "joaoplaranjeira@gmail.com",
                 "password": "teste",
+				"name": "João Laranjeira",
+				"jobTitle": "Coach",
 				"image":"dist/img/avatar5.png"
             },
             {
                 "email": "teste@email.com",
                 "password": "teste",
+				"name": "Hugo Azevedo",
+				"jobTitle": "Athlete",
 				"image": "dist/img/avatar.png"
             }]
   

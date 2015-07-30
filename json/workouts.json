@@ -1,12 +1,14 @@
 {
     "workoutmanage": [
         {
-            "athlete": "joaoplaranjeira@gmail.com",
+            "athlete": "teste@email.com",
+			"coach" : "joaoplaranjeira@gmail.com",
             "age": "29",
             "weight": "63",
             "height": "174",
             "weekworkouts": [
                 {
+					"idWeekWorkout": 1,
                     "startDay": "27",
                     "endDay": "2",
                     "startMonth": "07",
