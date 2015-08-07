@@ -473,15 +473,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- form start -->
                 <form role="form">
                   <div class="box-body">
-                    <div class="form-group">
+					<div id="divDistanceTarget" class="form-group">
+                      <label for="txtPace">Distance Target</label>
+                      <input type="text" class="form-control" id="txtDistanceTarget" placeholder="Distance Target">
+                    </div>
+					<div id="divDistance" class="form-group">
+                      <label for="txtPace">Distance</label>
+                      <input type="text" class="form-control" id="txtDistance" placeholder="Your Distance">
+                    </div>
+					<div id="divPaceTarget" class="form-group">
+                      <label for="txtPace">Pace Target</label>
+                      <input type="text" class="form-control" id="txtPaceTarget" placeholder="Pace Target">
+                    </div>
+                    <div id="divPace" class="form-group">
                       <label for="txtPace">Pace</label>
                       <input type="text" class="form-control" id="txtPace" placeholder="Your Pace">
                     </div>
-					<div class="form-group">
+					<div id="divWorkoutType" class="form-group">
+                      <label for="txtPace">Type</label>
+                      <input type="text" class="form-control" id="txtType" placeholder="Workout Type">
+                    </div>
+					<div id="divFcTarget" class="form-group">
+                      <label for="txtPace">FC Target</label>
+                      <input type="text" class="form-control" id="txtFcTarget" placeholder="FC Target">
+                    </div>
+					<div id="divStartTime" class="form-group">
                       <label for="txtStartTime">Start Time</label>
                       <input type="text" class="form-control" id="txtStartTime" placeholder="Start Time">
                     </div>
-                    <div class="form-group">
+                    <div id="divDuration" class="form-group">
                       <label for="txtDuration">Duration</label>
                       <input type="text" class="form-control" id="txtDuration" placeholder="Duration">
                     </div>
@@ -510,9 +530,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	<!-- Mustache -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.min.js" type="text/javascript"></script>
 	
+	<!-- Parse Framework -->
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+	
 	
 	<script type="text/javascript">
 		//$.widget.bridge('uibutton', $.ui.button);
+		
+		Parse.initialize("4dKr5FG4mIMaONo2lsNzmOs8xPjdNY6WLhvqLbjF", "fuN68zOwvaQrh53CssCyi6tAqK5IImXOxUe2fmAV");
+
+		
 	  
 		$(document).ready(function() {
 			var email = localStorage.getItem("email");
@@ -524,19 +551,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			if(email == null || password == null){
 				window.location.replace("login.html");	
 				return false;
-			}			
-						
-			$(".imgUser").each(function(){
-				$(this).attr("src", imgUser);
-			});
+			}
+
+			var user = Parse.User.current();
 			
-			$(".nameUser").each(function(){
-				$(this).html(nameUser);
+			user.fetch().then(function(fetchedUser){
+				
+				$(".imgUser").each(function(){
+					$(this).attr("src", fetchedUser.get('image'));
+				});
+				
+				$(".nameUser").each(function(){
+					$(this).html(fetchedUser.get('name'));
+				});
+				
+				$(".nameJobTitleUser").each(function(){
+					$(this).html(fetchedUser.get('name') + " - " + fetchedUser.get('jobTitle'));
+				});
+				
+				if(fetchedUser.get('jobTitle') == "Coach"){
+					$('#divDistance').find('input, textarea, select').attr('readonly', true);
+					$('#divPace').find('input, textarea, select').attr('readonly', true);
+					$('#divStartTime').find('input, textarea, select').attr('readonly', true);
+					$('#divDuration').find('input, textarea, select').attr('readonly', true);
+				}
+				
+			}, function(error){
+				//Handle the error
 			});
+									
 			
-			$(".nameJobTitleUser").each(function(){
-				$(this).html(nameUser + " - " + jobTitleUser);
-			});
 			
 			loadWorkouts();
 		});
@@ -545,9 +589,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			if(typeof(Storage) !== "undefined") {			
 				localStorage.removeItem("email");
 				localStorage.removeItem("password");
-				localStorage.removeItem("imgUser");	
-				localStorage.removeItem("thisWeekWorkout");					
-				window.location.replace("login.html");
 				return false;
 				
 			} else {
@@ -569,6 +610,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var fcTarget = $('#workoutTable tr:eq(4) td:eq(' + (line - 1) + ')').html();
 			var startTime = $('#workoutTable tr:eq(5) td:eq(' + (line - 1) + ')').html();
 			var duration = $('#workoutTable tr:eq(6) td:eq(' + (line - 1) + ')').html();
+			
+			var Workout = Parse.Object.extend("workout");
+			var workout = new Workout();
+			workout.set("dayOfWeek", parseInt(line));
+			workout.set("distanceTarget", parseInt($("#txtDistanceTarget").val()));
+			workout.set("paceTarget", $("#txtPaceTarget").val());
+			workout.set("workoutType", $("#txtType").val());
+			workout.set("fcTarget", $("#txtFcTarget").val());
+
+			workout.save(null, {
+			  success: function(workout) {
+				// Execute any logic that should take place after the object is saved.
+				alert('New object created with objectId: ' + workout.id);
+			  },
+			  error: function(workout, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and message.
+				alert('Failed to create new object, with error code: ' + error.message);
+			  }
+			});
 			
 		});
 		
