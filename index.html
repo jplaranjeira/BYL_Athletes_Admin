@@ -289,19 +289,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">27th July - 2nd August 2015</h3>
+                  <h3 class="box-title" id="dataIntervalId">27th July - 2nd August 2015</h3>
+				  <input type="hidden" id="startDate" value="1"/>
+				  <input type="hidden" id="endDate" value="2"/>
+				  
                   <div class="box-tools">
-                    <div class="input-group" style="width: 150px;">
+                    <!--<div class="input-group" style="width: 150px;">
                       <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Search" />
                       <div class="input-group-btn">
                         <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
                       </div>
-                    </div>
+                    </div>-->
+					<div class="pull-right">
+                      
+                      <div class="btn-group">
+                        <button class="btn btn-default btn-sm" onclick="goToPreviousWeek();"><i class="fa fa-chevron-left"></i></button>
+                        <button class="btn btn-default btn-sm" onclick="goToNextWeek();"><i class="fa fa-chevron-right"></i></button>
+                      </div><!-- /.btn-group -->
+                    </div><!-- /.pull-right -->
                   </div>
                 </div><!-- /.box-header -->
                 <div id="divWorkOut" class="box-body table-responsive no-padding">
                   				
-					<script id="workoutTmpl" type="text/template">
+					<script id="workoutTmpl" type="text/template">						
 						<table id="workoutTable" class="table table-hover">
 							<tr>
 							  <th></th>
@@ -315,52 +325,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</tr>
 							<tr>
 							  <th>Distance</th>
-							{{#workout}}							  
-							  <td>{{distance}}</td>	
+							{{#workout}}							
+							  <td>{{attributes.distanceTarget}}</td>								  
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Real Distance</th>
+							{{#workout}}							
+							  <td>{{attributes.realDistance}}</td>								  
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Pace Target</th>
+							  {{#workout}}
+							  <td>{{attributes.paceTarget}}</td>
 							{{/workout}}
 							</tr>
 							<tr>
 							  <th>Pace</th>
-							  <td>04:15</td>
-							  <td>04:40</td>
-							  <td>04:35</td>
-							  <td>04:00</td>
-							  <td>04:30</td>
-							  <td>04:30</td>
-							  <td>Free day</td>
+							  {{#workout}}
+							  <td>{{attributes.pace}}</td>
+							{{/workout}}
 							</tr>
 							<tr>
 							   <th>Type</th>
 							{{#workout}}
-							  <td>{{type}}</td>
+							  <td>{{attributes.workoutType}}</td>
 							{{/workout}}
 							</tr>
 							<tr>
 							  <th>FC Target</th>
 							{{#workout}}
-							  <td>{{fcTarget}}</td>
+							  <td>{{attributes.fcTarget}}</td>
 							{{/workout}}
 							</tr>
 							<tr>
 							  <th>Start Time</th>
-							  <td>19:00</td>
-							  <td>19:00</td>
-							  <td>19:00</td>
-							  <td>19:00</td>
-							  <td>19:00</td>
-							  <td>9:00</td>
-							  <td>Free day</td>
+							  {{#workout}}							  
+							  <td>{{attributes.startTime}}</td>
+							{{/workout}}
 							</tr>
 							<tr>
 							  <th>Duration</th>
-							  <td>00:45</td>
-							  <td>01:15</td>
-							  <td>00:45</td>
-							  <td>00:35</td>
-							  <td>00:50</td>
-							  <td>01:45</td>
-							  <td>Free day</td>
+							  {{#workout}}							  
+							  <td>{{attributes.duration}}</td>
+							{{/workout}}
 							</tr>
+							<tr style="display:none">
+							  <th></th>
+							{{#workout}}
+							  <td>{{id}}</td>
+							{{/workout}}
+							</tr>							
 							<tr>
 								<td></td>
 								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(1);">Insert Your Data</a></td>
@@ -474,15 +490,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <form role="form">
                   <div class="box-body">
 					<div id="divDistanceTarget" class="form-group">
-                      <label for="txtPace">Distance Target</label>
+                      <label for="txtDistanceTarget">Distance Target</label>
                       <input type="text" class="form-control" id="txtDistanceTarget" placeholder="Distance Target">
                     </div>
 					<div id="divDistance" class="form-group">
-                      <label for="txtPace">Distance</label>
+                      <label for="txtDistance">Distance</label>
                       <input type="text" class="form-control" id="txtDistance" placeholder="Your Distance">
                     </div>
 					<div id="divPaceTarget" class="form-group">
-                      <label for="txtPace">Pace Target</label>
+                      <label for="txtPaceTarget">Pace Target</label>
                       <input type="text" class="form-control" id="txtPaceTarget" placeholder="Pace Target">
                     </div>
                     <div id="divPace" class="form-group">
@@ -490,11 +506,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <input type="text" class="form-control" id="txtPace" placeholder="Your Pace">
                     </div>
 					<div id="divWorkoutType" class="form-group">
-                      <label for="txtPace">Type</label>
+                      <label for="txtType">Type</label>
                       <input type="text" class="form-control" id="txtType" placeholder="Workout Type">
                     </div>
 					<div id="divFcTarget" class="form-group">
-                      <label for="txtPace">FC Target</label>
+                      <label for="txtFcTarget">FC Target</label>
                       <input type="text" class="form-control" id="txtFcTarget" placeholder="FC Target">
                     </div>
 					<div id="divStartTime" class="form-group">
@@ -505,6 +521,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <label for="txtDuration">Duration</label>
                       <input type="text" class="form-control" id="txtDuration" placeholder="Duration">
                     </div>
+					<input type="hidden" id="txtId" value="1">
 					<input type="hidden" id="modalHiddenLine" value="Norway">
                   </div><!-- /.box-body -->
                 </form>
@@ -536,12 +553,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	
 	<script type="text/javascript">
 		//$.widget.bridge('uibutton', $.ui.button);
+		var today = new Date();		
+		var mondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+1);
+		var sundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+7);
+		
+		$("#startDate").val(mondayOfWeek);
+		$("#endDate").val(sundayOfWeek);
 		
 		Parse.initialize("4dKr5FG4mIMaONo2lsNzmOs8xPjdNY6WLhvqLbjF", "fuN68zOwvaQrh53CssCyi6tAqK5IImXOxUe2fmAV");
-
-		
+			
 	  
-		$(document).ready(function() {
+		$(document).ready(function() {			
 			var email = localStorage.getItem("email");
 			var password = localStorage.getItem("password");
 			var imgUser = localStorage.getItem("imgUser");
@@ -552,6 +574,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				window.location.replace("login.html");	
 				return false;
 			}
+			
+			defineDataInterval();
 
 			var user = Parse.User.current();
 			
@@ -569,11 +593,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					$(this).html(fetchedUser.get('name') + " - " + fetchedUser.get('jobTitle'));
 				});
 				
-				if(fetchedUser.get('jobTitle') == "Coach"){
+				/*if(fetchedUser.get('jobTitle') == "Coach"){
 					$('#divDistance').find('input, textarea, select').attr('readonly', true);
 					$('#divPace').find('input, textarea, select').attr('readonly', true);
 					$('#divStartTime').find('input, textarea, select').attr('readonly', true);
 					$('#divDuration').find('input, textarea, select').attr('readonly', true);
+				}else */
+				if(fetchedUser.get('jobTitle') == "Athlete"){
+					$('#divDistanceTarget').find('input, textarea, select').attr('readonly', true);
+					$('#divPaceTarget').find('input, textarea, select').attr('readonly', true);
+					$('#divWorkoutType').find('input, textarea, select').attr('readonly', true);
+					$('#divFcTarget').find('input, textarea, select').attr('readonly', true);
 				}
 				
 			}, function(error){
@@ -585,67 +615,141 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			loadWorkouts();
 		});
 		
-		$( "#btnSignOut" ).click(function() {			
-			if(typeof(Storage) !== "undefined") {			
-				localStorage.removeItem("email");
-				localStorage.removeItem("password");
-				return false;
-				
-			} else {
-				alert('Sorry! No Web Storage support..');
-			}		  
+		$( "#btnSignOut" ).click(function() {	
+			var user = Parse.User.current();
+			Parse.User.logOut();
+			localStorage.removeItem("email");
+			localStorage.removeItem("password");
+			window.location.replace("login.html");	  
 		});
 		
 		
 		function insertLineModal(line){	
 			$("#modalHiddenLine").val(line);
+			
+			var x = document.getElementById("workoutTable").rows[0].cells[0].innerHtml;			
+			var distance = $('#workoutTable tr:eq(1) td:eq(' + (line - 1) + ')').html();
+			var realDistance = $('#workoutTable tr:eq(2) td:eq(' + (line - 1) + ')').html();
+			var paceTarget = $('#workoutTable tr:eq(3) td:eq(' + (line - 1) + ')').html();
+			var pace = $('#workoutTable tr:eq(4) td:eq(' + (line - 1) + ')').html();
+			var type = $('#workoutTable tr:eq(5) td:eq(' + (line - 1) + ')').html();
+			var fcTarget = $('#workoutTable tr:eq(6) td:eq(' + (line - 1) + ')').html();
+			var startTime = $('#workoutTable tr:eq(7) td:eq(' + (line - 1) + ')').html();
+			var duration = $('#workoutTable tr:eq(8) td:eq(' + (line - 1) + ')').html();
+			var id = $('#workoutTable tr:eq(9) td:eq(' + (line - 1) + ')').html();
+			
+			$("#txtDistanceTarget").val(distance);
+			$("#txtDistance").val(realDistance);
+			$("#txtPace").val(pace);
+			$("#txtPaceTarget").val(paceTarget);
+			$("#txtType").val(type);
+			$("#txtFcTarget").val(fcTarget);
+			$("#txtStartTime").val(startTime);
+			$("#txtDuration").val(duration);	
+			$("#txtId").val(id);
+			
 		}
 		
 		$("#btnSaveWorkoutLine").click(function(){
 			var line = $("#modalHiddenLine").val();
-			var x = document.getElementById("workoutTable").rows[0].cells[0].innerHtml;			
-			var distance = $('#workoutTable tr:eq(1) td:eq(' + (line - 1) + ')').html();
-			var pace = $('#workoutTable tr:eq(2) td:eq(' + (line - 1) + ')').html();
-			var type = $('#workoutTable tr:eq(3) td:eq(' + (line - 1) + ')').html();
-			var fcTarget = $('#workoutTable tr:eq(4) td:eq(' + (line - 1) + ')').html();
-			var startTime = $('#workoutTable tr:eq(5) td:eq(' + (line - 1) + ')').html();
-			var duration = $('#workoutTable tr:eq(6) td:eq(' + (line - 1) + ')').html();
-			
+						
 			var Workout = Parse.Object.extend("workout");
-			var workout = new Workout();
-			workout.set("dayOfWeek", parseInt(line));
-			workout.set("distanceTarget", parseInt($("#txtDistanceTarget").val()));
-			workout.set("paceTarget", $("#txtPaceTarget").val());
-			workout.set("workoutType", $("#txtType").val());
-			workout.set("fcTarget", $("#txtFcTarget").val());
-
-			workout.save(null, {
-			  success: function(workout) {
-				// Execute any logic that should take place after the object is saved.
-				alert('New object created with objectId: ' + workout.id);
-			  },
-			  error: function(workout, error) {
-				// Execute any logic that should take place if the save fails.
-				// error is a Parse.Error with an error code and message.
-				alert('Failed to create new object, with error code: ' + error.message);
-			  }
-			});
+			
+			var id = $("#txtId").val();
+			var exists = null;
+			
+			var query = new Parse.Query(Workout);
+			
+			if(id != ""){
+				query.get(id, {
+				  success: function(workout) {
+					workout.set("dayOfWeek", parseInt(line));
+					workout.set("distanceTarget", parseInt($("#txtDistanceTarget").val()));
+					workout.set("realDistance", parseInt($("#txtDistance").val()));
+					workout.set("pace", $("#txtPace").val());
+					workout.set("paceTarget", $("#txtPaceTarget").val());
+					workout.set("workoutType", $("#txtType").val());
+					workout.set("fcTarget", $("#txtFcTarget").val());
+					workout.set("startTime", $("#txtStartTime").val());
+					workout.set("duration", $("#txtDuration").val());
+					isNew = false;
+					workout.save(null, {
+					  success: function(workout) {
+						// Execute any logic that should take place after the object is saved.					
+						alert('Object updated with objectId: ' + workout.id);
+						return true;
+					  },
+					  error: function(workout, error) {
+						// Execute any logic that should take place if the save fails.
+						// error is a Parse.Error with an error code and message.
+						alert('Failed to create new object, with error code: ' + error.message);
+						return true;
+					  }
+					});
+				  },
+				  error: function(object, error) {				
+				  }			  
+				});
+			}else{
+				var Workout = Parse.Object.extend("workout");
+				var workout = new Workout();
+				workout.set("dayOfWeek", parseInt(line));
+				workout.set("distanceTarget", parseInt($("#txtDistanceTarget").val()));
+				workout.set("realDistance", parseInt($("#txtDistance").val()));
+				workout.set("pace", $("#txtPace").val());
+				workout.set("paceTarget", $("#txtPaceTarget").val());
+				workout.set("workoutType", $("#txtType").val());
+				workout.set("fcTarget", $("#txtFcTarget").val());
+				workout.set("startTime", $("#txtStartTime").val());
+				workout.set("duration", $("#txtDuration").val());
+				
+				workout.save(null, {
+				  success: function(workout) {
+					// Execute any logic that should take place after the object is saved.
+					isNew = false;
+					alert('Object updated with objectId: ' + workout.id);
+				  },
+				  error: function(workout, error) {
+					// Execute any logic that should take place if the save fails.
+					// error is a Parse.Error with an error code and message.
+					alert('Failed to create new object, with error code: ' + error.message);
+				  }
+				});
+			}
+			
+			
+			
+			
 			
 		});
 		
 		function loadWorkouts(){
 			
-			$.getJSON('json/workouts.json', function(data) {				
-				
-				$.each(data.workoutmanage, function(){
-					var email = localStorage.getItem("email");
+			var Workout = Parse.Object.extend("workout");
+			var query = new Parse.Query(Workout);
+			
+			var startDate = new Date ($("#startDate").val());
+			var endDate = new Date ($("#endDate").val());
+			
+			startDate.setDate(startDate.getDate() + 1);
+			endDate.setDate(endDate.getDate() + 1);
+			query.greaterThanOrEqualTo("startDate", startDate);
+			query.lessThanOrEqualTo("endDate", endDate);
+			query.ascending("dayOfWeek");
 					
-					if((this.coach == email) || this.athlete == email){
-						localStorage.setItem("thisWeekWorkout", this.weekworkouts[0]);
-						fillThisWeekWorkout(this.weekworkouts[0]);
-					};
-				});		
-				
+			query.find({
+			  success: function(results) {
+			  if(results != ""){
+					localStorage.setItem("workouts", results);				
+					var workoutObj = {workout:results};
+					fillThisWeekWorkout(workoutObj);
+				}else{
+					addEmptyWorkouts();
+				}
+			  },
+			  error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			  }
 			});
 						
 		}
@@ -656,6 +760,69 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var html = Mustache.to_html(template, data);
 					
 			$('#divWorkOut').html(html);
+		}
+		
+		function defineDataInterval(){
+			var startDate = new Date ($("#startDate").val());
+			var endDate = new Date ($("#endDate").val());
+			
+			var monday = startDate.getDate() + "-" + (startDate.getMonth() + 1) + "-" + startDate.getFullYear();
+			var sunday = endDate.getDate() + "-" + (endDate.getMonth() + 1) + "-" + endDate.getFullYear();
+			$("#dataIntervalId").html("<b>" + monday + "</b>  to  <b>" + sunday + "</b>");
+		}
+		
+		function goToPreviousWeek(){		
+			var startDate = new Date ($("#startDate").val());
+			var endDate = new Date ($("#endDate").val());
+			
+			startDate.setTime(startDate.getTime() - ((24*60*60*1000) * 7));
+			endDate.setTime(endDate.getTime() - ((24*60*60*1000) * 7));
+			
+			$("#startDate").val(startDate);
+			$("#endDate").val(endDate);
+			
+			defineDataInterval();
+			loadWorkouts();
+		}
+		function goToNextWeek(){
+			var startDate = new Date ($("#startDate").val());
+			var endDate = new Date ($("#endDate").val());
+			
+			startDate.setTime(startDate.getTime() + ((24*60*60*1000) * 7));
+			endDate.setTime(endDate.getTime() + ((24*60*60*1000) * 7));
+			
+			$("#startDate").val(startDate);
+			$("#endDate").val(endDate);
+			
+			defineDataInterval();
+			loadWorkouts();
+		}
+		
+		function addEmptyWorkouts(){
+			var i = 0;
+			var startDate = new Date ($("#startDate").val());
+			var endDate = new Date ($("#endDate").val());
+			
+			while(i < 7){
+				var Workout = Parse.Object.extend("workout");
+				var workout = new Workout();
+				workout.set("dayOfWeek", (i+1));
+				workout.set("startDate", startDate);
+				workout.set("endDate", endDate);
+				
+				workout.save(null, {
+				  success: function(workout) {
+					// Execute any logic that should take place after the object is saved.
+					alert('Object created with objectId: ' + workout.id);
+				  },
+				  error: function(workout, error) {
+					// Execute any logic that should take place if the save fails.
+					// error is a Parse.Error with an error code and message.
+					alert('Failed to create new object, with error code: ' + error.message);
+				  }
+				});
+				i++;
+			}
 		}
 	  
     </script>
