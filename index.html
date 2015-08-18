@@ -309,86 +309,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div><!-- /.pull-right -->
                   </div>
                 </div><!-- /.box-header -->
-                <div id="divWorkOut" class="box-body table-responsive no-padding">
-                  				
-					<script id="workoutTmpl" type="text/template">						
-						<table id="workoutTable" class="table table-hover">
-							<tr>
-							  <th></th>
-							  <th>Monday</th>
-							  <th>Tuesday</th>
-							  <th>Wednesday</th>
-							  <th>Thursday</th>
-							  <th>Friday</th>
-							  <th>Saturday</th>
-							  <th>Sunday</th>
-							</tr>
-							<tr>
-							  <th>Distance</th>
-							{{#workout}}							
-							  <td>{{attributes.distanceTarget}}</td>								  
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>Real Distance</th>
-							{{#workout}}							
-							  <td>{{attributes.realDistance}}</td>								  
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>Pace Target</th>
-							  {{#workout}}
-							  <td>{{attributes.paceTarget}}</td>
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>Pace</th>
-							  {{#workout}}
-							  <td>{{attributes.pace}}</td>
-							{{/workout}}
-							</tr>
-							<tr>
-							   <th>Type</th>
-							{{#workout}}
-							  <td>{{attributes.workoutType}}</td>
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>FC Target</th>
-							{{#workout}}
-							  <td>{{attributes.fcTarget}}</td>
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>Start Time</th>
-							  {{#workout}}							  
-							  <td>{{attributes.startTime}}</td>
-							{{/workout}}
-							</tr>
-							<tr>
-							  <th>Duration</th>
-							  {{#workout}}							  
-							  <td>{{attributes.duration}}</td>
-							{{/workout}}
-							</tr>
-							<tr style="display:none">
-							  <th></th>
-							{{#workout}}
-							  <td>{{id}}</td>
-							{{/workout}}
-							</tr>							
-							<tr>
-								<td></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(1);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(2);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(3);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(4);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(5);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(6);">Insert Your Data</a></td>
-								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(7);">Insert Your Data</a></td>
-							</tr>
-						</table>
-					</script>
+                <div id="divWorkOut" class="box-body table-responsive no-padding">					
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div>
@@ -556,6 +477,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		var today = new Date();		
 		var mondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+1);
 		var sundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+7);
+		var weekCreated = false;
 		
 		$("#startDate").val(mondayOfWeek);
 		$("#endDate").val(sundayOfWeek);
@@ -677,6 +599,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					  success: function(workout) {
 						// Execute any logic that should take place after the object is saved.					
 						alert('Object updated with objectId: ' + workout.id);
+						$('#workoutTable tr:eq(1) td:eq(' + (line - 1) + ')').html(workout.get("distanceTarget"));
+						$('#workoutTable tr:eq(2) td:eq(' + (line - 1) + ')').html(workout.get("realDistance"));
+						$('#workoutTable tr:eq(3) td:eq(' + (line - 1) + ')').html(workout.get("paceTarget"));
+						$('#workoutTable tr:eq(4) td:eq(' + (line - 1) + ')').html(workout.get("pace"));
+						$('#workoutTable tr:eq(5) td:eq(' + (line - 1) + ')').html(workout.get("workoutType"));
+						$('#workoutTable tr:eq(6) td:eq(' + (line - 1) + ')').html(workout.get("fcTarget"));
+						$('#workoutTable tr:eq(7) td:eq(' + (line - 1) + ')').html(workout.get("startTime"));
+						$('#workoutTable tr:eq(8) td:eq(' + (line - 1) + ')').html(workout.get("duration"));
+						$('#trainingDataModal').modal('hide');
 						return true;
 					  },
 					  error: function(workout, error) {
@@ -744,7 +675,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					var workoutObj = {workout:results};
 					fillThisWeekWorkout(workoutObj);
 				}else{
-					addEmptyWorkouts();
+					if(!weekCreated)
+						addEmptyWorkouts();
 				}
 			  },
 			  error: function(error) {
@@ -759,6 +691,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			Mustache.parse(template);   // optional, speeds up future uses
 			var html = Mustache.to_html(template, data);
 					
+			$('#divWorkOut').empty();
 			$('#divWorkOut').html(html);
 		}
 		
@@ -794,7 +727,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			$("#startDate").val(startDate);
 			$("#endDate").val(endDate);
 			
-			defineDataInterval();
+			defineDataInterval();			
 			loadWorkouts();
 		}
 		
@@ -802,6 +735,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var i = 0;
 			var startDate = new Date ($("#startDate").val());
 			var endDate = new Date ($("#endDate").val());
+			
+			startDate.setDate(startDate.getDate() + 1);
+			endDate.setDate(endDate.getDate() + 1);
 			
 			while(i < 7){
 				var Workout = Parse.Object.extend("workout");
@@ -823,9 +759,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				});
 				i++;
 			}
+			weekCreated = true;			
+			loadWorkouts();
 		}
 	  
     </script>
+	
+	<script id="workoutTmpl" type="text/html">						
+		<table id="workoutTable" class="table table-hover">
+			<tr>
+			  <th></th>
+			  <th>Monday</th>
+			  <th>Tuesday</th>
+			  <th>Wednesday</th>
+			  <th>Thursday</th>
+			  <th>Friday</th>
+			  <th>Saturday</th>
+			  <th>Sunday</th>
+			</tr>
+			<tr>
+			  <th>Distance</th>
+			{{#workout}}							
+			  <td>{{attributes.distanceTarget}}</td>								  
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>Real Distance</th>
+			{{#workout}}							
+			  <td>{{attributes.realDistance}}</td>								  
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>Pace Target</th>
+			  {{#workout}}
+			  <td>{{attributes.paceTarget}}</td>
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>Pace</th>
+			  {{#workout}}
+			  <td>{{attributes.pace}}</td>
+			{{/workout}}
+			</tr>
+			<tr>
+			   <th>Type</th>
+			{{#workout}}
+			  <td>{{attributes.workoutType}}</td>
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>FC Target</th>
+			{{#workout}}
+			  <td>{{attributes.fcTarget}}</td>
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>Start Time</th>
+			  {{#workout}}							  
+			  <td>{{attributes.startTime}}</td>
+			{{/workout}}
+			</tr>
+			<tr>
+			  <th>Duration</th>
+			  {{#workout}}							  
+			  <td>{{attributes.duration}}</td>
+			{{/workout}}
+			</tr>
+			<tr style="display:none">
+			  <th></th>
+			{{#workout}}
+			  <td>{{id}}</td>
+			{{/workout}}
+			</tr>							
+			<tr>
+				<td></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(1);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(2);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(3);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(4);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(5);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(6);">Insert Your Data</a></td>
+				<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(7);">Insert Your Data</a></td>
+			</tr>
+		</table>
+	</script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
           Both of these plugins are recommended to enhance the

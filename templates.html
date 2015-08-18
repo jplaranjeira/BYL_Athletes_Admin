@@ -1,0 +1,78 @@
+<div id="workoutTmpl">
+						<table id="workoutTable" class="table table-hover">
+							<tr>
+							  <th></th>
+							  <th>Monday</th>
+							  <th>Tuesday</th>
+							  <th>Wednesday</th>
+							  <th>Thursday</th>
+							  <th>Friday</th>
+							  <th>Saturday</th>
+							  <th>Sunday</th>
+							</tr>
+							<tr>
+							  <th>Distance</th>
+							{{#workout}}							
+							  <td>{{distanceTarget}}</td>								  
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Real Distance</th>
+							{{#workout}}							
+							  <td>{{attributes.realDistance}}</td>								  
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Pace Target</th>
+							  {{#workout}}
+							  <td>{{attributes.paceTarget}}</td>
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Pace</th>
+							  {{#workout}}
+							  <td>{{attributes.pace}}</td>
+							{{/workout}}
+							</tr>
+							<tr>
+							   <th>Type</th>
+							{{#workout}}
+							  <td>{{attributes.workoutType}}</td>
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>FC Target</th>
+							{{#workout}}
+							  <td>{{attributes.fcTarget}}</td>
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Start Time</th>
+							  {{#workout}}							  
+							  <td>{{attributes.startTime}}</td>
+							{{/workout}}
+							</tr>
+							<tr>
+							  <th>Duration</th>
+							  {{#workout}}							  
+							  <td>{{attributes.duration}}</td>
+							{{/workout}}
+							</tr>
+							<tr style="display:none">
+							  <th></th>
+							{{#workout}}
+							  <td>{{id}}</td>
+							{{/workout}}
+							</tr>							
+							<tr>
+								<td></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(1);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(2);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(3);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(4);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(5);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(6);">Insert Your Data</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#trainingDataModal" onclick="insertLineModal(7);">Insert Your Data</a></td>
+							</tr>
+						</table>
+</div>
